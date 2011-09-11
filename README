@@ -1,4 +1,4 @@
-rduino code for a basic adjustable timer for an Canon 550D.
+Arduino code for a basic adjustable timer for an Canon 550D.
 
 This is my first proper attempt at a non-trivial Arduino project, so bear with it. It uses the SimpleTimer library, available from:
 
