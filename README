@@ -3,3 +3,42 @@ Arduino code for a basic adjustable timer for an Canon 550D.
 This is my first proper attempt at a non-trivial Arduino project, so bear with it. It uses the SimpleTimer library, available from:
 
 http://www.arduino.cc/playground/Code/SimpleTimer
+
+This was built against an Arduino Ethernet board (i.e. one of these http://www.arduino.cc/en/Main/ArduinoBoardEthernet). As such, certain pins are omitted as they are reserved for the Ethernet interface and SD card. 
+
+Arduino pin-mappings
+--------------------
+
+The pin-mappings are as follows:
+
+0. Not used
+1. Not used
+2. 4-digit 7-segment LED display (4d7s) - pin 14
+3. 4d7s - pin 16
+4. 4d7s - pin 13
+5. 4d7s - pin 3
+6. 4d7s - pin 5
+7. 4d7s - pin 11
+8. 4d7s - pin 15
+9. 4d7s - pin 8 (via 220 Ohm resistor)
+14. (aka A0) - Rotary Encoder - left pin
+15. (aka A1) - Rotary Encoder - right pin
+16. (aka A2) - IR LED via 220 Ohm resistor
+17. (aka A3) - 4d7s - pin 6 (via 220 Ohm resistor)
+18. (aka A4) - 4d7s - pin 2 (via 220 Ohm resistor)
+19. (aka A5) - 4d7s - pin 1 (via 220 Ohm resistor)
+
+Other pins:
+* 4d7s - pin 4 - +5v via 1k Ohm resistor
+* 4d7s - pin 12 - GND
+* Rotary Encoder - center pin - GND
+
+Referenced sources
+------------------
+
+Lots and lots of existing tutorials were used to help get this going. These include:
+* http://allaboutee.com/2011/07/09/arduino-4-digit-7-segment-display-tutorial/ - for the 4-digit 7-segment LED display;
+* http://www.circuitsathome.com/mcu/reading-rotary-encoder-on-arduino - for the Rotary Encoder;
+* http://www.ladyada.net/learn/sensors/ir.html - for decoding and encoding the IR signals.
+
+There were various others I tried at points, but these were the ones that seemed to work best for me. If you spot similarities to other tutorials I've not mentioned, let me know and I'll add creds where I've missed them.
