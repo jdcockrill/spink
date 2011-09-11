@@ -1,3 +1,11 @@
+/*
+  spink.pde - An adjustable shutter-timer for
+  my Canon EOS 550D. A rotary encoder sets the
+  time, it is displayed on a 4-digit 7-segment
+  LED display and an IR LED emits the signal to
+  trigger the camera.
+  Created by jdcockrill, September 11, 2011.
+*/
 // Define rotary encoder pins
 #define ENC_A 14
 #define ENC_B 15
@@ -7,13 +15,11 @@
 #define LED_A 16
 
 #include "ircodes.h"
+#include "irled.h"
 #include <SimpleTimer.h>
 
 // Setup the IR LED pin as an output.
-void _setupLEDPin()
-{
-  pinMode(LED_A, OUTPUT);
-}
+IRLED irled(LED_A);
 
 // Set up the pins for the rotary encoder as inputs
 void _setupRotaryPins()
@@ -23,7 +29,6 @@ void _setupRotaryPins()
   digitalWrite(ENC_A, HIGH);
   pinMode(ENC_B, INPUT);
   digitalWrite(ENC_B, HIGH);
-
 }
 
 // Set up the pins for the LED screen as outputs
@@ -44,40 +49,6 @@ void _setupScreenPins()
   digitalWrite(A3, LOW);
   digitalWrite(A4, LOW);
   digitalWrite(A5, LOW); 
-}
-
-// This procedure sends a 38KHz pulse to the IRledPin 
-// for a certain # of microseconds. We'll use this whenever we need to send codes
-void pulseIR(long microsecs) {
-  // we'll count down from the number of microseconds we are told to wait
-
-  cli();  // this turns off any background interrupts
-
-  while (microsecs > 0) {
-    // 38 kHz is about 13 microseconds high and 13 microseconds low
-    digitalWrite(LED_A, HIGH);  // this takes about 3 microseconds to happen
-    delayMicroseconds(10);         // hang out for 10 microseconds
-    digitalWrite(LED_A, LOW);   // this also takes about 3 microseconds
-    delayMicroseconds(10);         // hang out for 10 microseconds
-
-    // so 26 microseconds altogether
-    microsecs -= 26;
-  }
-
-  sei();  // this turns them back on
-}
-
-// Send an IR signal using the given array
-// as the on/off timings.
-void sendSignal(int arr[], int len) {
-  for (int i = 0; i < len; i++) {
-    if (i%2 == 0) {
-      pulseIR(arr[i]);
-    }
-    else {
-      delayMicroseconds(arr[i]);
-    }
-  }
 }
 
 // Turn on the given LED segment (1 is ones, 2 is tens, etc)
@@ -276,9 +247,9 @@ int8_t read_encoder()
 void doSend(){
   Serial.println("Shutter trigger");
   int arrayLen = sizeof(CanonIRsignal) / sizeof(int);
-  sendSignal(CanonIRsignal, arrayLen);
+  irled.sendSignal(CanonIRsignal, arrayLen);
   delay(65);
-  sendSignal(CanonIRsignal, arrayLen);
+  irled.sendSignal(CanonIRsignal, arrayLen);
 }
 
 SimpleTimer timer;
@@ -290,7 +261,7 @@ void setup()
   // LED screen
   _setupScreenPins();
   // IR LED
-  _setupLEDPin();
+  //_setupLEDPin();
 
   // init serial communication
   Serial.begin(115200); 
