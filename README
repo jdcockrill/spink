@@ -21,12 +21,13 @@ The pin-mappings are as follows:
 7. 4d7s - pin 11
 8. 4d7s - pin 15
 9. 4d7s - pin 8 (via 220 Ohm resistor)
+10. (aka ETHCS) - 4d7s - pin 6 (via 220 Ohm resistor)
+11. (aka MOSI) - 4d7s - pin 2 (via 220 Ohm resistor)
+12. (aka MISO) - 4d7s - pin 1 (via 220 Ohm resistor)
 14. (aka A0) - Rotary Encoder - left pin
 15. (aka A1) - Rotary Encoder - right pin
 16. (aka A2) - IR LED via 220 Ohm resistor
-17. (aka A3) - 4d7s - pin 6 (via 220 Ohm resistor)
-18. (aka A4) - 4d7s - pin 2 (via 220 Ohm resistor)
-19. (aka A5) - 4d7s - pin 1 (via 220 Ohm resistor)
+
 
 Other pins:
 * 4d7s - pin 4 - +5v via 1k Ohm resistor
