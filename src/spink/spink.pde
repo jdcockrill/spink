@@ -1,4 +1,4 @@
-/*
+ /*
   spink.pde - An adjustable shutter-timer for
   my Canon EOS 550D. A rotary encoder sets the
   time, it is displayed on a 4-digit 7-segment
@@ -21,6 +21,12 @@
 // Setup the IR LED pin as an output.
 IRLED irled(LED_A);
 
+// Define Screen pins
+int screenSegmentPins[] = {2,3,4,5,6,7,8};
+int screenSegmentPinCount = 7; // this is fixed for a 7-segment display
+int screenControlPins[] = {9,10,11,12};
+int screenControlPinCount = 4; // this is fixed for a display with 4 digits
+
 // Set up the pins for the rotary encoder as inputs
 void _setupRotaryPins()
 {
@@ -34,52 +40,51 @@ void _setupRotaryPins()
 // Set up the pins for the LED screen as outputs
 void _setupScreenPins() 
 {
-  for (int ii = 2; ii < 10; ii++) {
-    // all pins 2-9 OUTPUTs
-    pinMode(ii, OUTPUT);
+  // Set all segment and control pins to output
+  for (int ii = 0; ii < screenSegmentPinCount; ii++) {
+    pinMode(screenSegmentPins[ii], OUTPUT);
   }
-  pinMode(A3, OUTPUT);
-  pinMode(A4, OUTPUT);
-  pinMode(A5, OUTPUT); 
+  for (int ii = 0; ii < screenControlPinCount; ii++) {
+    pinMode(screenControlPins[ii], OUTPUT);
+  }
 
-  for (int ii = 2; ii < 10; ii++) {
-    // all pins 2-9 OUTPUTs
-    digitalWrite(ii, LOW);
+  // Set all segment and control pins to LOW
+  for (int ii = 0; ii < screenSegmentPinCount; ii++) {
+    digitalWrite(screenSegmentPins[ii], LOW);
   }
-  digitalWrite(A3, LOW);
-  digitalWrite(A4, LOW);
-  digitalWrite(A5, LOW); 
+  for (int ii = 0; ii < screenControlPinCount; ii++) {
+    digitalWrite(screenControlPins[ii], LOW);
+  }
 }
 
 // Turn on the given LED segment (1 is ones, 2 is tens, etc)
 void turnOnSquare(int num)
 {
-  int d1=9,d2=17,d3=18,d4=19;
   switch(num)
   {
   case 1:
-    digitalWrite(d2,LOW);
-    digitalWrite(d3,LOW);
-    digitalWrite(d4,LOW);
-    digitalWrite(d1,HIGH);
+    digitalWrite(screenControlPins[1],LOW);
+    digitalWrite(screenControlPins[2],LOW);
+    digitalWrite(screenControlPins[3],LOW);
+    digitalWrite(screenControlPins[0],HIGH);
     break;
   case 2:
-    digitalWrite(d1,LOW);
-    digitalWrite(d3,LOW);
-    digitalWrite(d4,LOW);
-    digitalWrite(d2,HIGH);
+    digitalWrite(screenControlPins[0],LOW);
+    digitalWrite(screenControlPins[2],LOW);
+    digitalWrite(screenControlPins[3],LOW);
+    digitalWrite(screenControlPins[1],HIGH);
     break;
   case 3:
-    digitalWrite(d1,LOW);
-    digitalWrite(d2,LOW);
-    digitalWrite(d4,LOW);
-    digitalWrite(d3,HIGH);
+    digitalWrite(screenControlPins[0],LOW);
+    digitalWrite(screenControlPins[1],LOW);
+    digitalWrite(screenControlPins[3],LOW);
+    digitalWrite(screenControlPins[2],HIGH);
     break;
   case 4:
-    digitalWrite(d1,LOW);
-    digitalWrite(d2,LOW);
-    digitalWrite(d3,LOW);
-    digitalWrite(d4,HIGH);
+    digitalWrite(screenControlPins[0],LOW);
+    digitalWrite(screenControlPins[1],LOW);
+    digitalWrite(screenControlPins[2],LOW);
+    digitalWrite(screenControlPins[3],HIGH);
     break;
   default:
     // this should never occur, but do what you want here
@@ -96,103 +101,103 @@ void displayDigit(int num)
   {
   case 0:
     //PORTD=B00000011; // pins 2-7 on
-    digitalWrite(2, LOW);
-    digitalWrite(3, LOW);
-    digitalWrite(4, LOW);
-    digitalWrite(5, LOW);
-    digitalWrite(6, LOW);
-    digitalWrite(7, LOW);      
-    digitalWrite(8, HIGH); // turn off pin 8
+    digitalWrite(screenSegmentPins[0], LOW);
+    digitalWrite(screenSegmentPins[1], LOW);
+    digitalWrite(screenSegmentPins[2], LOW);
+    digitalWrite(screenSegmentPins[3], LOW);
+    digitalWrite(screenSegmentPins[4], LOW);
+    digitalWrite(screenSegmentPins[5], LOW);      
+    digitalWrite(screenSegmentPins[6], HIGH); // turn off pin 8
     break;
   case 1:
     //PORTD=B11100111; // only pins 3 and 4 are on
-    digitalWrite(2, HIGH);
-    digitalWrite(3, LOW);
-    digitalWrite(4, LOW);
-    digitalWrite(5, HIGH);
-    digitalWrite(6, HIGH);
-    digitalWrite(7, HIGH);      
-    digitalWrite(8, HIGH); // turn off pin 8
+    digitalWrite(screenSegmentPins[0], HIGH);
+    digitalWrite(screenSegmentPins[1], LOW);
+    digitalWrite(screenSegmentPins[2], LOW);
+    digitalWrite(screenSegmentPins[3], HIGH);
+    digitalWrite(screenSegmentPins[4], HIGH);
+    digitalWrite(screenSegmentPins[5], HIGH);
+    digitalWrite(screenSegmentPins[6], HIGH); // turn off pin 8
     break;
   case 2:
     //PORTD=B10010011; // only pins 2,3,5, 6 and 8 on
-    digitalWrite(2, LOW);
-    digitalWrite(3, LOW);
-    digitalWrite(4, HIGH);
-    digitalWrite(5, LOW);
-    digitalWrite(6, LOW);
-    digitalWrite(7, HIGH);      
-    digitalWrite(8,LOW); // segment g on
+    digitalWrite(screenSegmentPins[0], LOW);
+    digitalWrite(screenSegmentPins[1], LOW);
+    digitalWrite(screenSegmentPins[2], HIGH);
+    digitalWrite(screenSegmentPins[3], LOW);
+    digitalWrite(screenSegmentPins[4], LOW);
+    digitalWrite(screenSegmentPins[5], HIGH);
+    digitalWrite(screenSegmentPins[6], LOW); // segment g on
     break;
   case 3:
     //PORTD=B11000011; // only pins 2,3,4 and 5 on
-    digitalWrite(2, LOW);
-    digitalWrite(3, LOW);
-    digitalWrite(4, LOW);
-    digitalWrite(5, LOW);
-    digitalWrite(6, HIGH);
-    digitalWrite(7, HIGH);      
-    digitalWrite(8,LOW); // segment g on
+    digitalWrite(screenSegmentPins[0], LOW);
+    digitalWrite(screenSegmentPins[1], LOW);
+    digitalWrite(screenSegmentPins[2], LOW);
+    digitalWrite(screenSegmentPins[3], LOW);
+    digitalWrite(screenSegmentPins[4], HIGH);
+    digitalWrite(screenSegmentPins[5], HIGH);
+    digitalWrite(screenSegmentPins[6], LOW); // segment g on
     break;
   case 4:
     //PORTD=B01100111; // only pins 3,4 and 7 on
-    digitalWrite(2, HIGH);
-    digitalWrite(3, LOW);
-    digitalWrite(4, LOW);
-    digitalWrite(5, HIGH);
-    digitalWrite(6, HIGH);
-    digitalWrite(7, LOW);      
-    digitalWrite(8,LOW); // segment g on
+    digitalWrite(screenSegmentPins[0], HIGH);
+    digitalWrite(screenSegmentPins[1], LOW);
+    digitalWrite(screenSegmentPins[2], LOW);
+    digitalWrite(screenSegmentPins[3], HIGH);
+    digitalWrite(screenSegmentPins[4], HIGH);
+    digitalWrite(screenSegmentPins[5], LOW);
+    digitalWrite(screenSegmentPins[6], LOW); // segment g on
     break;
   case 5:
     //PORTD=B01001011; //B10110100; // only pins 2,4,5 and 7 on
-    digitalWrite(2, LOW);
-    digitalWrite(3, HIGH);
-    digitalWrite(4, LOW);
-    digitalWrite(5, LOW);
-    digitalWrite(6, HIGH);
-    digitalWrite(7, LOW);      
-    digitalWrite(8,LOW); // segment g on
+    digitalWrite(screenSegmentPins[0], LOW);
+    digitalWrite(screenSegmentPins[1], HIGH);
+    digitalWrite(screenSegmentPins[2], LOW);
+    digitalWrite(screenSegmentPins[3], LOW);
+    digitalWrite(screenSegmentPins[4], HIGH);
+    digitalWrite(screenSegmentPins[5], LOW);
+    digitalWrite(screenSegmentPins[6], LOW); // segment g on
     break;
   case 6:
     //PORTD=B00001011; //B11110100; // only pins 2,4,5,6 and 7 on
-    digitalWrite(2, LOW);
-    digitalWrite(3, HIGH);
-    digitalWrite(4, LOW);
-    digitalWrite(5, LOW);
-    digitalWrite(6, LOW);
-    digitalWrite(7, LOW);      
-    digitalWrite(8,LOW); // segment g on
+    digitalWrite(screenSegmentPins[0], LOW);
+    digitalWrite(screenSegmentPins[1], HIGH);
+    digitalWrite(screenSegmentPins[2], LOW);
+    digitalWrite(screenSegmentPins[3], LOW);
+    digitalWrite(screenSegmentPins[4], LOW);
+    digitalWrite(screenSegmentPins[5], LOW);
+    digitalWrite(screenSegmentPins[6], LOW); // segment g on
     break;
   case 7:
     //PORTD=B11100011; // only pins 2,3 and 4 on
-    digitalWrite(2, LOW);
-    digitalWrite(3, LOW);
-    digitalWrite(4, LOW);
-    digitalWrite(5, HIGH);
-    digitalWrite(6, HIGH);
-    digitalWrite(7, HIGH);      
-    digitalWrite(8,HIGH); // segment g off
+    digitalWrite(screenSegmentPins[0], LOW);
+    digitalWrite(screenSegmentPins[1], LOW);
+    digitalWrite(screenSegmentPins[2], LOW);
+    digitalWrite(screenSegmentPins[3], HIGH);
+    digitalWrite(screenSegmentPins[4], HIGH);
+    digitalWrite(screenSegmentPins[5], HIGH);
+    digitalWrite(screenSegmentPins[6], HIGH); // segment g off
     break;
   case 8:
     //PORTD=B00000011; // pins 2-7 on
-    digitalWrite(2, LOW);
-    digitalWrite(3, LOW);
-    digitalWrite(4, LOW);
-    digitalWrite(5, LOW);
-    digitalWrite(6, LOW);
-    digitalWrite(7, LOW);      
-    digitalWrite(8,LOW); // turn on pin 8
+    digitalWrite(screenSegmentPins[0], LOW);
+    digitalWrite(screenSegmentPins[1], LOW);
+    digitalWrite(screenSegmentPins[2], LOW);
+    digitalWrite(screenSegmentPins[3], LOW);
+    digitalWrite(screenSegmentPins[4], LOW);
+    digitalWrite(screenSegmentPins[5], LOW);
+    digitalWrite(screenSegmentPins[6], LOW); // turn on pin 8
     break;
   case 9:
     //PORTD=B01000011; // only pins 2,3, 4 and 5 on
-    digitalWrite(2, LOW);
-    digitalWrite(3, LOW);
-    digitalWrite(4, LOW);
-    digitalWrite(5, LOW);
-    digitalWrite(6, HIGH);
-    digitalWrite(7, LOW);      
-    digitalWrite(8,LOW); // segment g on
+    digitalWrite(screenSegmentPins[0], LOW);
+    digitalWrite(screenSegmentPins[1], LOW);
+    digitalWrite(screenSegmentPins[2], LOW);
+    digitalWrite(screenSegmentPins[3], LOW);
+    digitalWrite(screenSegmentPins[4], HIGH);
+    digitalWrite(screenSegmentPins[5], LOW);
+    digitalWrite(screenSegmentPins[6], LOW); // segment g on
     break;
   }
 }
