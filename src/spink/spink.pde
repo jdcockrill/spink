@@ -101,6 +101,7 @@ void displayDigit(int num)
   {
   case 0:
     //PORTD=B00000011; // pins 2-7 on
+    
     digitalWrite(screenSegmentPins[0], LOW);
     digitalWrite(screenSegmentPins[1], LOW);
     digitalWrite(screenSegmentPins[2], LOW);
